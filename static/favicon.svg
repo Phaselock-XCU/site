@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0a0c0f"/>
+  <!-- a square wave locked to a reference edge: the project's mark -->
+  <path d="M3 21 H9 V11 H16 V21 H23 V11 H29" fill="none" stroke="#7de2d1"
+        stroke-width="3" stroke-linejoin="miter" stroke-linecap="butt"/>
+</svg>

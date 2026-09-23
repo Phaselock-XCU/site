@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{% block title %}{{ config.title }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ config.description }}{% endblock %}">
+<link rel="canonical" href="{{ current_url | default(value=config.base_url) | safe }}">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ config.title }}">
+<meta property="og:description" content="{{ config.description }}">
+<meta property="og:url" content="{{ config.base_url | safe }}">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="{{ get_url(path='favicon.svg') }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <a class="wordmark" href="{{ config.base_url | safe }}">
+    <span class="wordmark-mark" aria-hidden="true"></span>phaselock
+  </a>
+  <nav class="site-nav">
+    <a href="{{ config.extra.repo_url | safe }}">GitHub</a>
+  </nav>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-foot">
+  <p>phaselock — an exact-cycle computing stack.</p>
+  <p><a href="{{ config.extra.repo_url | safe }}">github.com/Phaselock-XCU</a></p>
+</footer>
+</body>
+</html>

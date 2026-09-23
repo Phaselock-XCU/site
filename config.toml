@@ -1,0 +1,36 @@
+# Zola configuration for the phaselock.tech landing page.
+#
+# base_url must match where the site is actually served or every internal
+# link, the stylesheet <link> and the canonical URL break. It is paired with
+# static/CNAME, which is what tells GitHub Pages to serve this host at all —
+# change one and you must change the other.
+base_url = "https://phaselock.tech"
+
+title = "phaselock"
+description = "An exact-cycle computing stack. Performance as a compile time property."
+
+# The site is one page of hand-written HTML and CSS: nothing to index, no
+# feed to generate, no Sass to compile. Every one of these defaults to the
+# value set here, but they are stated explicitly so a future section cannot
+# silently switch one on.
+compile_sass = false
+build_search_index = false
+generate_feeds = false
+
+# Trailing slashes off: /about, not /about/. Only matters if a second page is
+# ever added, but the choice belongs in config, not in whichever template
+# happens to be written first.
+hard_link_static = false
+
+[markdown]
+highlight_code = true
+# Dark-leaning theme, because the site's default palette is dark. Currently
+# unused — the landing copy has no fenced code blocks — but set so the first
+# one added does not render as black-on-black.
+highlight_theme = "base16-ocean-dark"
+# Smart punctuation: the pitch prose uses quotes and dashes.
+smart_punctuation = true
+
+[extra]
+# Consumed by templates/base.html for the footer and the header link.
+repo_url = "https://github.com/Phaselock-XCU"

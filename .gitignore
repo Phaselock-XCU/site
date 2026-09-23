@@ -1,0 +1,6 @@
+# Zola's build output. Deployment builds it from source in CI; a committed
+# copy would only ever be stale.
+/public
+# Zola's incremental-build cache.
+/.zola-cache
+/.claude/

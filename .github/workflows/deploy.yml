@@ -1,0 +1,60 @@
+# Build the Zola site and publish it to GitHub Pages.
+#
+# The zola version here is pinned independently of shell.nix (Actions has no
+# nix). Keep the two in step: shell.nix's nixpkgs pin currently gives 0.20.0,
+# so that is what CI installs. If you bump one, bump the other, or a build
+# that passes locally can fail here.
+#
+# Pages must be configured once by hand: Settings → Pages → Source →
+# "GitHub Actions", plus the custom domain phaselock.tech (static/CNAME is
+# copied into the artifact, but DNS still has to point here).
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; let a newer push supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ZOLA_VERSION: 0.20.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install zola
+        run: |
+          curl -sSfL \
+            "https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz -C /usr/local/bin zola
+          zola --version
+
+      # base_url comes from config.toml, which is the same value the local
+      # build uses — no --base-url override, so CI cannot drift from dev.
+      - name: Build
+        run: zola build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

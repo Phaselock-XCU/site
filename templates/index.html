@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ config.title }} — {{ section.extra.tagline }}{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <h1 class="hero-name">phaselock</h1>
+  <p class="hero-tagline">{{ section.extra.tagline }}</p>
+  <p class="hero-lede">{{ section.extra.lede }}</p>
+  <!-- <p class="hero-actions">
+    <a class="btn btn-primary" href="{{ config.extra.repo_url | safe }}">Read the code</a>
+  </p> -->
+  <div class="cycle-rule" aria-hidden="true"></div>
+</section>
+
+<section class="pitch prose">
+  <h2 class="eyebrow">The pitch</h2>
+  {{ section.content | safe }}
+</section>
+
+<section class="proof">
+  <figure class="term">
+    <figcaption class="term-label">{{ section.extra.proof.label }}</figcaption>
+    {# The line break is emitted before each line but the first, so the block
+       carries no trailing newline -- which <pre> would render as a blank row. #}
+    <pre class="term-body"><code>{% for l in section.extra.proof.lines %}{% if not loop.first %}
+{% endif %}{% if l.kind == "cmd" %}<span class="term-cmd"><span class="term-prompt">$</span> {{ l.text }}</span>{% else %}<span class="term-out">{{ l.text }}</span>{% endif %}{% endfor %}</code></pre>
+    <p class="term-caption">{{ section.extra.proof.caption }}</p>
+  </figure>
+</section>
+
+<section class="stack">
+  <h2 class="eyebrow">The stack</h2>
+  <div class="stack-grid">
+    {% for c in section.extra.components %}
+    <article class="card">
+      <p class="card-role">{{ c.role }}</p>
+      <h3 class="card-name">{{ c.name }}</h3>
+      <p class="card-claim">{{ c.claim }}</p>
+      <p class="card-detail">{{ c.detail }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="keystone">
+  <blockquote>{{ section.extra.keystone }}</blockquote>
+</section>
+
+<section class="edges">
+  <h2 class="eyebrow">The edges</h2>
+  <ol class="edge-list">
+    {% for e in section.extra.edges %}
+    <li class="edge">
+      <h3 class="edge-title">{{ e.title }}</h3>
+      <p class="edge-body">{{ e.body }}</p>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="status">
+  <h2 class="eyebrow">The code</h2>
+  <table class="status-table">
+    <thead>
+      <tr>
+        <th scope="col">Component</th>
+        <th scope="col">What</th>
+        <th scope="col">Written in</th>
+        <th scope="col">State</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in section.extra.status %}
+      <tr>
+        <th scope="row" class="st-name">{{ s.name }}</th>
+        <td class="st-what">{{ s.what }}</td>
+        <td class="st-lang">{{ s.lang }}</td>
+        <td class="st-state"><span class="pill pill-{{ s.state }}">{{ s.note }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}
