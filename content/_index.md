@@ -6,6 +6,13 @@ template = "index.html"
 # the pitch must never mean editing HTML. The template's only job is to decide
 # where these values land on the page.
 #
+# STRUCTURE: the body below is split into two page sections by a literal
+# `<!-- split -->` comment. Everything before it renders under "The pitch",
+# everything after under "Technical details" (templates/index.html splits on
+# it). Deleting the marker fails the build rather than silently dropping half
+# the copy, which is the intended behaviour — but if you are reordering
+# paragraphs, move the marker deliberately rather than around it.
+#
 # TYPOGRAPHY: smart_punctuation rewrites the markdown BODY only, never front
 # matter. Strings in [extra] are handed to the template verbatim, so type the
 # real ’ — … characters here. A straight quote renders beside the body's
@@ -135,6 +142,10 @@ note = "Planned, unimplemented"
 Write a program, compile it, and the compiler hands back the number of cycles
 it will take. Not a benchmark. Not a p99 taken over a thousand runs. **The number.**
 
+_**Performance as a compile time property**_
+
+<!-- split -->
+
 How does it achieve that? By removing all the guessing. **quartz** has no caches, no branch
 predictor, no interlocks and no interrupts. **phi** has no garbage collector
 and no implicit ordering. **carrier**
@@ -150,5 +161,3 @@ something the build checks.
 It is built for work where a late answer is a wrong answer: latency-critical
 dataplane code, control loops, instrumentation. Places where finishing in a
 known number of cycles is worth more than finishing quickly on average.
-
-_**Performance as a compile time property**_

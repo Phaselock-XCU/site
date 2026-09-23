@@ -58,7 +58,7 @@
     static/style.css.
   - The decorative .cycle-rule stays aria-hidden and carries no text.
   - Every class that carries styling has a rule in static/style.css. The
-    section wrapper classes .pitch, .proof, .stack, .edges and .status are the
+    section wrapper classes .pitch, .technical, .proof, .stack, .edges and .status are the
     deliberate exception: identity hooks for anchors and future targeting,
     spaced by the shared main > section rule.
   - The proof transcript's label and caption keep saying the demonstration is
@@ -94,9 +94,23 @@
   <div class="cycle-rule" aria-hidden="true"></div>
 </section>
 
+{# The body of content/_index.md carries both the pitch and the technical
+   detail, separated by a literal <!-- split --> comment that survives markdown
+   rendering. Splitting here rather than storing two strings in front matter
+   keeps all prose in the markdown body, where smart_punctuation applies and
+   where it can be read as continuous text. parts.0 is the pitch, parts.1 the
+   rest; if the marker is ever removed, parts.1 does not exist and the build
+   fails loudly rather than silently dropping half the copy. #}
+{% set parts = section.content | split(pat="<!-- split -->") %}
+
 <section class="pitch prose">
   <h2 class="eyebrow">The pitch</h2>
-  {{ section.content | safe }}
+  {{ parts.0 | safe }}
+</section>
+
+<section class="technical prose">
+  <h2 class="eyebrow">Technical details</h2>
+  {{ parts.1 | safe }}
 </section>
 
 <section class="proof">
