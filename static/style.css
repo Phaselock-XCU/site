@@ -1,10 +1,32 @@
 /* phaselock.tech — the whole stylesheet. No JavaScript, no webfonts, no
    preprocessor: one file, system font stacks, and CSS custom properties.
 
-   Dark is the base palette (an instrument-panel look suits a project about
-   cycle counts); light is an override under prefers-color-scheme so the site
-   is readable on a bright screen without a toggle. Every colour is a token —
-   nothing below the :root blocks hard-codes one. */
+   Dark is the base palette and light is the override under
+   prefers-color-scheme, rather than the other way round. The project is about
+   instrument-grade timing and the dark treatment is the intended look;
+   defining it on bare :root means it is what renders when a browser reports
+   no preference. The light block redefines only tokens, which is what makes a
+   one-block override sufficient — nothing below the :root blocks hard-codes a
+   colour.
+
+   Both palettes were picked for contrast, not just hue: --ink-dim against
+   --bg is the lowest-contrast pairing used for running text in each mode, and
+   the light-mode --accent is darkened to #0f8f7c because the dark mode's
+   #7de2d1 fails against white.
+
+   INVARIANTS — check these after any edit
+   - No colour literal appears outside the two :root blocks.
+   - Every colour token in the base :root is redefined in the
+     prefers-color-scheme: light block.
+   - Every class rule here corresponds to markup in templates/. The reverse
+     holds except for the five section wrapper classes .pitch, .proof, .stack,
+     .edges and .status, which are styled only through main > section.
+   - .pill-done, .pill-wip and .pill-planned cover exactly the `state` values
+     used in content/_index.md.
+   - No @import and no external font or asset URL: the file must stay
+     self-contained and request-free.
+   - Body text stays legible in both palettes. Re-check contrast after any
+     token change. */
 
 :root {
   --bg:        #0a0c0f;
@@ -177,6 +199,15 @@ main > section { margin-block: 5.5rem; }
 /* Component names bolded in the pitch prose echo the card headings in the
    stack grid below, so they are typeset the same way. */
 .prose strong { font-family: var(--mono); font-weight: 600; color: var(--accent); }
+
+/* Inline code in prose: the accent mono face at a size that does not push
+   the surrounding line height around. Shares the palette with .card-name and
+   .st-name, so a named artifact reads the same wherever it appears. */
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  color: var(--accent);
+}
 
 /* --- proof block ------------------------------------------------------- */
 

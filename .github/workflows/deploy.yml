@@ -8,6 +8,27 @@
 # Pages must be configured once by hand: Settings → Pages → Source →
 # "GitHub Actions", plus the custom domain phaselock.tech (static/CNAME is
 # copied into the artifact, but DNS still has to point here).
+#
+# static/CNAME needs no special handling: zola copies everything under static/
+# into public/ verbatim, so it lands at the artifact root where Pages expects
+# it. Concurrency is grouped so two pushes cannot deploy out of order, with
+# cancel-in-progress so a superseded build does not spend a runner finishing a
+# version that is already stale.
+#
+# ZOLA_VERSION duplicates a fact that lives in shell.nix, because Actions has
+# no nix and shell.nix's nixpkgs pin is what decides the local version. The
+# two are kept equal by hand. This is the repo's one accepted duplication; the
+# alternative — installing nix in CI — costs minutes per run for a site that
+# builds in single-digit milliseconds.
+#
+# INVARIANTS
+#   - ZOLA_VERSION equals `zola --version` inside nix-shell.
+#   - The build step passes no --base-url, so config.toml stays authoritative.
+#   - upload-pages-artifact's path is `public`, matching zola's output dir.
+#   - permissions grants no more than pages: write, id-token: write,
+#     contents: read.
+#   - /public stays in .gitignore. A committed build would shadow nothing in
+#     CI but would mislead every reader of the repo.
 name: deploy
 
 on:

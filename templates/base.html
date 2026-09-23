@@ -1,3 +1,51 @@
+{#
+  base.html — the page shell every page inherits.
+
+  Owns everything true of the site rather than of one page, so a second page
+  can be added without restating any of it.
+
+  Blocks a child may override:
+    title        contents of <title>.        default: config.title
+    description  the meta description.       default: config.description
+    content      everything inside <main>.   no default
+
+  Reads: config.title, config.description, config.base_url,
+         config.extra.repo_url
+
+  WHY | safe ON URLS
+  Tera autoescaping turns / into &#x2F;. Browsers decode that in attributes so
+  links still work, but the emitted source is unreadable and the escaping is
+  pure noise in a URL. It is sound here only because every one of these values
+  comes from config.toml and never from user input. Do not extend | safe to a
+  value that originates in content.
+
+  WHY cachebust ON THE STYLESHEET BUT NOT THE FAVICON
+  GitHub Pages serves static assets with long cache lifetimes; without the
+  content hash a returning visitor can get new HTML against an old
+  stylesheet. A stale favicon is harmless and browsers cache those by path
+  regardless, so hashing it would only churn the URL.
+
+  WHY .wordmark-mark IS AN EMPTY SPAN
+  The mark is one accent-coloured square drawn entirely in CSS — no image, no
+  SVG, no request. aria-hidden because the word "phaselock" beside it already
+  names the link.
+
+  The skip link is first in the body and visible only on focus, so a keyboard
+  user can jump the header without it appearing for anyone else.
+
+  INVARIANTS — check these after any edit
+  - The content block exists and sits inside <main id="main">.
+  - Every URL interpolated into an href or content attribute ends in | safe,
+    and every such value originates in config.toml.
+  - .skip's target (#main) matches the id on <main>.
+  - Exactly one <h1> per page. This file emits none; the child owns it.
+  - Every class name here has a rule in static/style.css. This file declares
+    no bare section wrappers, so that holds exactly for base.html.
+  - Tera is HTML-unaware: an expression inside an HTML comment is still
+    evaluated and still ships. To remove markup from the output use a Tera
+    comment, never an HTML one. Tera comments also do not nest — a literal
+    close-comment sequence written inside one ends it early.
+#}
 <!DOCTYPE html>
 <html lang="en">
 <head>

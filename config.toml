@@ -1,5 +1,25 @@
 # Zola configuration for the phaselock.tech landing page.
 #
+# Templates read these through the `config` object. Every key under [extra]
+# that a template names must exist here: Tera aborts the build on a missing
+# variable rather than rendering blank, so that correspondence is enforced by
+# `zola build` and does not need policing by hand.
+#
+# INVARIANTS
+#   - base_url equals the sole line of static/CNAME, prefixed https://, no
+#     trailing slash. They are one decision recorded in two files: CNAME is
+#     what makes Pages answer for the host, base_url is what makes the emitted
+#     HTML point at it. Change one without the other and the site either 404s
+#     or serves pages whose every link references the wrong origin.
+#   - No --base-url override appears in .github/workflows/deploy.yml, so CI
+#     and a local build cannot drift.
+#   - Every key here is accepted BOTH by the zola shell.nix pins (0.20.0) and
+#     by a current zola. Verify with `zola build` and
+#     `nix-shell --run 'zola build'`, then diff the two public/ trees; they
+#     must be byte-identical. The site is routinely built by whatever zola is
+#     on a developer's PATH, not only by the pinned one, so a key that exists
+#     in just one of them is a live breakage.
+#
 # base_url must match where the site is actually served or every internal
 # link, the stylesheet <link> and the canonical URL break. It is paired with
 # static/CNAME, which is what tells GitHub Pages to serve this host at all —
@@ -23,14 +43,24 @@ generate_feeds = false
 hard_link_static = false
 
 [markdown]
-highlight_code = true
-# Dark-leaning theme, because the site's default palette is dark. Currently
-# unused — the landing copy has no fenced code blocks — but set so the first
-# one added does not render as black-on-black.
-highlight_theme = "base16-ocean-dark"
 # Smart punctuation: the pitch prose uses quotes and dashes.
 smart_punctuation = true
+
+# Syntax highlighting is deliberately NOT configured here. Zola renamed
+# `highlight_code`/`highlight_theme` to a `highlighting` table after 0.20, so
+# any spelling of it builds on one side of that boundary and hard-fails on the
+# other — and this site has no fenced code blocks for it to act on (the proof
+# transcript is hand-built HTML in templates/index.html). Leaving it out is
+# what lets both the pinned 0.20 and a newer zola build this tree. If a code
+# block is ever added, set it using the spelling of whichever version the pin
+# and the deploy workflow agree on, and check the other still builds.
 
 [extra]
 # Consumed by templates/base.html for the footer and the header link.
 repo_url = "https://github.com/Phaselock-XCU"
+
+# The hero's call to action. It is a mailto rather than a link to the code
+# because the code is not public yet — github.com/Phaselock-XCU serves only a
+# profile README, so a "read the code" button there would promise something
+# that is not on the other side of it. Revisit when the repos open.
+contact_email = "lily@phaselock.tech"

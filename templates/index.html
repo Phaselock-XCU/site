@@ -1,5 +1,80 @@
 {% extends "base.html" %}
 
+{#
+  index.html — the landing page, and currently the only page.
+
+  Lays out the copy held in content/_index.md in a fixed order: hero, pitch
+  prose, the proof transcript, the three-component grid, the keystone
+  pull-quote, the edges, the status table. It holds no copy of its own —
+  every sentence a visitor reads comes from the content file. That split is
+  the point: editing the pitch must never mean editing HTML, and adding a
+  fourth stack component or another status row is a content-only change
+  because the template iterates.
+
+  REQUIRES on section.extra (from content/_index.md front matter). Tera aborts
+  the build if any is absent, so this list is enforced, not aspirational:
+    tagline    string, hero accent line; also appended to <title>
+    lede       string, hero paragraph
+    keystone   string, the pull-quote
+    proof      { label, caption, lines[] }, lines[] = { kind, text },
+               kind "cmd" renders with a $ prompt, anything else as output
+    components [] of { role, name, claim, detail }
+    edges      [] of { title, body }
+    status     [] of { name, what, lang, state, note },
+               state one of: done | wip | planned
+  Also renders section.content — the markdown body — as the pitch.
+  Reads config.extra.contact_email for the hero button mailto target.
+
+  section.content | safe is the one unescaped interpolation: it is already
+  rendered HTML, so escaping it would print tags as text.
+
+  state is interpolated straight into a class name (the pill- prefix plus the
+  value) rather than branched on in an if/elif chain. A typo therefore yields
+  an unstyled pill rather than a build error — the tradeoff taken to keep
+  presentation logic out of the template. The three legal values are the ones
+  style.css defines rules for.
+
+  Proof-transcript mechanics. It is a <figure> wrapping <pre><code>, so the
+  shell session is marked up as preformatted text rather than faked with
+  styled divs: it survives copy-paste and reads correctly to a screen reader.
+  Line breaks are emitted before every line EXCEPT the first, because a
+  trailing newline inside a <pre> renders as a visible blank row. The $
+  prompts sit in their own spans so CSS can make them unselectable, leaving a
+  copied transcript runnable. Line text is left escaped rather than marked
+  safe: shell commands legitimately contain < > and &, so escaping is correct
+  even though it renders / as a character reference in the source.
+
+  The edges are an <ol>, not a <ul> — the readme numbers them — and the
+  visible 01/02/03 markers come from a CSS counter rather than literal numbers
+  in the markup, so reordering is a content edit. The status table uses
+  <th scope="row"> for the component name so a screen reader announces
+  "quartz" as the row header rather than as another cell.
+
+  INVARIANTS — check these after any edit
+  - No user-facing sentence is written in this file; all copy comes from
+    section.*.
+  - Exactly one <h1> (.hero-name).
+  - Every state value in content/_index.md has a matching .pill-* rule in
+    static/style.css.
+  - The decorative .cycle-rule stays aria-hidden and carries no text.
+  - Every class that carries styling has a rule in static/style.css. The
+    section wrapper classes .pitch, .proof, .stack, .edges and .status are the
+    deliberate exception: identity hooks for anchors and future targeting,
+    spaced by the shared main > section rule.
+  - The proof transcript's label and caption keep saying the demonstration is
+    the ASSEMBLY path (qasm -> scope) and that the exactness comes from
+    quartz's fixed instruction latencies. The pitch immediately above promises
+    a compiler-reported cycle count, so a caption omitting this reads as phi
+    having produced the number — which it did not.
+  - The hero button's label matches what is actually on the other side of it.
+    It may only promise code once the repos are public; an anonymous request
+    to github.com/rctcwyvrn/phaselock returned 404 when this was written.
+  - Tera is HTML-unaware: an HTML comment does not stop an expression from
+    being evaluated and shipped. Use a Tera comment to remove markup from the
+    output. Tera comments do not nest, and this header must stay BELOW the
+    extends tag — Tera requires extends to be the first token in the file.
+#}
+
 {% block title %}{{ config.title }} — {{ section.extra.tagline }}{% endblock %}
 
 {% block content %}
@@ -8,9 +83,14 @@
   <h1 class="hero-name">phaselock</h1>
   <p class="hero-tagline">{{ section.extra.tagline }}</p>
   <p class="hero-lede">{{ section.extra.lede }}</p>
-  <!-- <p class="hero-actions">
-    <a class="btn btn-primary" href="{{ config.extra.repo_url | safe }}">Read the code</a>
-  </p> -->
+  {# The address is published in the clear. If this is ever withheld again,
+     comment it out as Tera and not as HTML — Tera is HTML-unaware, so an
+     expression left inside an HTML comment is still evaluated and the address
+     still ships in the served page, invisible to a reader and plain to a
+     scraper. Verify with grep against public/, not by looking at the page. #}
+  <p class="hero-actions">
+    <a class="btn btn-primary" href="mailto:{{ config.extra.contact_email | safe }}">Get in touch</a>
+  </p>
   <div class="cycle-rule" aria-hidden="true"></div>
 </section>
 

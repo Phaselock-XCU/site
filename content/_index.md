@@ -5,6 +5,22 @@ template = "index.html"
 # Every piece of landing-page copy lives here, not in the template. Editing
 # the pitch must never mean editing HTML. The template's only job is to decide
 # where these values land on the page.
+#
+# TYPOGRAPHY: smart_punctuation rewrites the markdown BODY only, never front
+# matter. Strings in [extra] are handed to the template verbatim, so type the
+# real ’ — … characters here. A straight quote renders beside the body's
+# curly ones and the mismatch shows.
+#
+# HONESTY RULES — these are project principles, not style preferences:
+#   - Never call the performance certificate a "proof", and never claim the
+#     schedule behind it is minimal or optimal. Both are stated in
+#     plans/06-speed-passes.md ("never called a 'proof'", "never claimed
+#     *minimal*"). The certificate is exact over the schedule the compiler
+#     chose, not over all possible schedules.
+#   - Keep the exactness claim per-path and parametric, collapsing to a single
+#     number only when branch outcomes and trip counts are static.
+#     plans/research/README.md records this as "exactness is per-path, never
+#     per-program"; a page promising one number per program contradicts it.
 [extra]
 tagline = "Performance as a compile time property."
 lede = "An exact-cycle computing stack: a VLIW CPU, a dataflow language, and a unikernel; all designed together so the compiler knows the cycle count before the program ever runs."
@@ -27,7 +43,7 @@ keystone = "quartz runs with no non-deterministic runtime behaviour, so phi gets
 # changes, this number changes with it.
 [extra.proof]
 label = "hello, world — the machine today"
-caption = "94 cycles. Exact, not measured — from quartz’s fixed instruction latencies. phi’s own numbers land with the compiler."
+caption = "94 cycles. Exact, not measured — from quartz’s fixed instruction latencies."
 
 [[extra.proof.lines]]
 kind = "cmd"
@@ -69,7 +85,7 @@ detail = "An operating system built into your program rather than sitting undern
 
 [[extra.edges]]
 title = "Deterministic latency"
-body = "An exact-cycle unit — an XCU — that executes instructions with cycle times and latencies known in advance rather than measured after the fact."
+body = "An exact-cycle unit, an XCU, that executes instructions with cycle times and latencies known in advance rather than measured after the fact."
 
 [[extra.edges]]
 title = "Regressions are build failures"
@@ -119,7 +135,7 @@ note = "Planned, unimplemented"
 Write a program, compile it, and the compiler hands back the number of cycles
 it will take. Not a benchmark. Not a p99 taken over a thousand runs. **The number.**
 
-How do we achieve that? By removing all the guessing. **quartz** has no caches, no branch
+How does it achieve that? By removing all the guessing. **quartz** has no caches, no branch
 predictor, no interlocks and no interrupts. **phi** has no garbage collector
 and no implicit ordering. **carrier**
 has no dynamic scheduler, and nothing sitting between a device and the code
@@ -127,7 +143,12 @@ that reads it. Each layer gives up a mechanism that buys average-case speed at
 the price of predictability.
 
 What comes back in exchange is timing as a fact about the *program* rather
-than a property of the *run*. Latency stops being something you measure after
-deployment and becomes something the build checks.
+than a property of the *run*. The compiler's job is to hand you a
+**performance certificate**. Latency stops being something you measure after deployment and becomes
+something the build checks.
+
+It is built for work where a late answer is a wrong answer: latency-critical
+dataplane code, control loops, instrumentation. Places where finishing in a
+known number of cycles is worth more than finishing quickly on average.
 
 _**Performance as a compile time property**_

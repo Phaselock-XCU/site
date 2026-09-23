@@ -36,8 +36,15 @@ Editing the pitch is a `content/_index.md` change and nothing else. Adding a
 fourth stack component or another status row is likewise content-only — the
 template iterates.
 
-Every file above has a sidecar `<filename>.md` beside it describing what it
-does and the invariants an edit must preserve.
+Each file carries its own documentation in a header comment: what it is for,
+the non-obvious decisions, and an **INVARIANTS** list of the things an edit
+must not break. Read the top of a file before changing it.
+
+This repo does not use the sidecar-doc convention — there is no
+`.claude/sidecar.json` and no `<filename>.md` beside any source file. The
+templates directory is the reason it would not work here anyway: Zola parses
+every file under `templates/` as a Tera template, `.md` included, so a sidecar
+there fails the build the moment it quotes tag syntax.
 
 ## Deploying
 
