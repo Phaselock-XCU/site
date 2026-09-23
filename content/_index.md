@@ -15,11 +15,19 @@ keystone = "quartz runs with no non-deterministic runtime behaviour, so phi gets
 
 # The concrete demonstration, rendered as a terminal block under the pitch.
 # `kind` is one of: cmd (shell prompt), out (program output).
+#
+# This is the ASSEMBLY path — qasm, not phi — and the label and caption say so
+# on purpose. The pitch above promises that a compiler hands back a cycle
+# count; a reader who takes this block as phi doing that would be wrong, since
+# phi's compiler is still in progress. The exactness on show here comes from
+# quartz's fixed per-instruction latencies, which is a real and separable
+# claim. Do not re-word this to imply the language produced it.
+#
 # The cycle count is a public commitment — if golden/101_uart_hello.qasm
 # changes, this number changes with it.
 [extra.proof]
-label = "hello, world — start to finish"
-caption = "94 cycles. Guaranteed by the compiler, not measured after the fact."
+label = "hello, world — the machine today"
+caption = "94 cycles. Exact, not measured — from quartz’s fixed instruction latencies. phi’s own numbers land with the compiler."
 
 [[extra.proof.lines]]
 kind = "cmd"

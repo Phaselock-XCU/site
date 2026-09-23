@@ -77,6 +77,11 @@ reader announces "quartz" as the row header rather than as another cell.
 - Exactly one `<h1>` (`.hero-name`).
 - The proof transcript's cycle count in `content/_index.md` matches what
   `golden/101_uart_hello.qasm` actually reports; it is a public commitment.
+- The proof transcript's label and caption keep saying that the demonstration
+  is the assembly path (`qasm` → `scope`) and that the exactness comes from
+  quartz's fixed instruction latencies. The pitch immediately above promises a
+  compiler-reported cycle count, so a caption that omits this reads as phi
+  having produced the number — which it did not.
 - Every `state` value in `content/_index.md` has a matching `.pill-*` rule in
   `static/style.css`.
 - The decorative `.cycle-rule` stays `aria-hidden` and carries no text.
