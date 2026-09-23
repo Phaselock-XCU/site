@@ -116,8 +116,6 @@ a:hover { text-decoration-thickness: 2px; }
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
-.site-nav { font-family: var(--mono); font-size: 0.85rem; }
-
 .site-foot {
   margin-top: 6rem;
   padding-block: 2rem 3rem;

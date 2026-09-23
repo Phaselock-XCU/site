@@ -9,8 +9,12 @@
     description  the meta description.       default: config.description
     content      everything inside <main>.   no default
 
-  Reads: config.title, config.description, config.base_url,
-         config.extra.repo_url
+  Reads: config.title, config.description, config.base_url
+
+  There is no link to the source anywhere on this site. The code is not
+  public, so a GitHub link would either lead to an org page carrying nothing
+  but a profile README or to a 404. The hero's mailto in index.html is the
+  only outbound link; keep it that way until the repos open.
 
   WHY | safe ON URLS
   Tera autoescaping turns / into &#x2F;. Browsers decode that in attributes so
@@ -73,9 +77,6 @@
   <a class="wordmark" href="{{ config.base_url | safe }}">
     <span class="wordmark-mark" aria-hidden="true"></span>phaselock
   </a>
-  <nav class="site-nav">
-    <a href="{{ config.extra.repo_url | safe }}">GitHub</a>
-  </nav>
 </header>
 
 <main id="main">
@@ -84,7 +85,6 @@
 
 <footer class="site-foot">
   <p>phaselock — an exact-cycle computing stack.</p>
-  <p><a href="{{ config.extra.repo_url | safe }}">github.com/Phaselock-XCU</a></p>
 </footer>
 </body>
 </html>

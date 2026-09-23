@@ -56,11 +56,10 @@ smart_punctuation = true
 # and the deploy workflow agree on, and check the other still builds.
 
 [extra]
-# Consumed by templates/base.html for the footer and the header link.
-repo_url = "https://github.com/Phaselock-XCU"
-
-# The hero's call to action. It is a mailto rather than a link to the code
-# because the code is not public yet — github.com/Phaselock-XCU serves only a
-# profile README, so a "read the code" button there would promise something
-# that is not on the other side of it. Revisit when the repos open.
+# The hero's call to action, and the only outbound link on the site. It is a
+# mailto rather than a link to the source because the code is not public: an
+# anonymous request to the code repo 404s, and the org page serves nothing but
+# a profile README. A source link would promise something that is not on the
+# other side of it. When the repos open, add the URL back here and restore the
+# header nav and footer link in templates/base.html.
 contact_email = "lily@phaselock.tech"
