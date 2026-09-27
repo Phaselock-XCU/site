@@ -30,7 +30,7 @@ template = "index.html"
 #     per-program"; a page promising one number per program contradicts it.
 [extra]
 tagline = "Performance as a compile time property."
-lede = "An exact-cycle computing stack: a VLIW CPU, a dataflow language, and a unikernel; all designed together so the compiler knows the cycle count before the program ever runs."
+lede = "An exact-cycle computing stack: a CPU, a language, and kernel all designed together so the compiler knows the cycle count before the program ever runs."
 
 # The property that falls out of the three above. Rendered as a pull-quote
 # between the grid and the edges.
